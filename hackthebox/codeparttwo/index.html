@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox CodePartTwo</title>
+
+  <meta name="description" content="Resolución de la máquina CodePartTwo de la plataforma de HackTheBox">
+  <meta name="author" content="s1egfr1ed">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox CodePartTwo">
+  <meta name="twitter:description" content="Resolución de la máquina CodePartTwo de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="s1egfr1ed">
+  <meta name="twitter:image" content="/images/hackthebox/codeparttwo.png" />
+
+  <meta property="og:site_name" content="s1egfr1ed" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox CodePartTwo">
+  <meta property="og:description" content="Resolución de la máquina CodePartTwo de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/codeparttwo.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/codeparttwo.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox CodePartTwo" href="/feed.xml">
+</head>
+
+<body style="background-color: #282828;">
+
+  <span class="mobile btn-mobile-menu">
+    <i class="icon icon-list btn-mobile-menu__icon"></i>
+    <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+  </span>
+
+  <header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+    <div class="panel-main">
+      <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="s1egfr1ed">
+          <h1 class="panel-cover__title panel-title scale-up-center">s1egfr1ed</h1>
+
+          <hr class="panel-cover__divider">
+          <p class="panel-cover__description slide-top"><strong>Pentesting y</strong> <strong>Desarrollo de
+              Malware</strong></p>
+          <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+          <div class="navigation-wrapper">
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item grow"><a href="/hackthebox" title="s1egfr1ed"
+                    class="blog-button">HackTheBox</a></li>
+              </ul>
+            </nav>
+
+            <nav class="cover-navigation navigation--social">
+              <ul class="navigation">
+
+                <li class="navigation__item grow">
+                  <a href="https://github.com/z1egfr1ed" title="Github" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://linkedin.com/in/marshelaillon" title="Linkedin" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">Linkedin</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://instagram.com/zygfr1ed" title="Instagram" target="_blank">
+                    <i class="icon icon-social-instagram"></i>
+                    <span class="label">Instagram</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://x.com/z1egfr1ed" title="Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://youtube.com/@s1egfr1ed" title="Youtube" target="_blank">
+                    <i class="icon icon-social-youtube"></i>
+                    <span class="label">Youtube</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="mailto:marshel.aillon@gmail.com" title="Correo Electrónico" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-cover--overlay"></div>
+    </div>
+  </header>
+  <br>
+  <div class="content-wrapper">
+    <div class="content-wrapper__inner">
+      <article class="post-container post-container--single">
+        <div class="izquierda">
+          <h3 class="post-title">Contenido</h3><br>
+          <ul>
+            <li><a href="#key-findings">Key Findings</a></li>
+            <li><a href="#learning-objectives">Key Learning Objectives</a></li>
+            <li><a href="#reconnaissance">Reconnaissance & Enumeration</a></li>
+            <li><a href="#web-assessment">Web Application Assessment</a></li>
+            <li><a href="#source-code">Source Code Analysis</a></li>
+            <li><a href="#tech-stack">Technology Stack Identification</a></li>
+            <li><a href="#exploitation">Vulnerability Identification & Exploitation</a></li>
+            <li><a href="#database">Database Analysis & Credential Extraction</a></li>
+            <li><a href="#user-pivoting">User Pivoting</a></li>
+            <li><a href="#privesc-analysis">Privilege Escalation Analysis</a></li>
+            <li><a href="#config-exploit">Configuration File Exploitation</a></li>
+            <li><a href="#root-access">Root Access Achievement</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+          </ul>
+        </div>
+
+        <header class="post-header slide-top">
+          <h4 class="post-title">HackTheBox</h4>
+          <picture><img src="/images/hackthebox/codeparttwo.png"
+              style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable" />
+          </picture>
+          <h2 class="post-title">CodePartTwo</h2><br>
+        </header>
+
+        <section class="post" id="key-findings">
+          <br>
+          <h3 class="post-title">Key Findings</h3><br>
+
+          <p class="plain-text">Durante el análisis de seguridad de la máquina CodePartTwo se identificaron las
+            siguientes vulnerabilidades críticas:</p>
+
+          <ul class="plain-text">
+            <li>Plataforma de ejecución de JavaScript en puerto 8000</li>
+            <li>Vulnerabilidad en js2py (CVE-2024-28397) - Sandbox Escape</li>
+            <li>Divulgación de código fuente vía funcionalidad de descarga</li>
+            <li>Base de datos SQLite conteniendo credenciales hasheadas en MD5</li>
+            <li>Binario SUID <code class="language-plaintext highlighter-rouge">/usr/bin/npbackup-cli</code> para
+              escalada de privilegios</li>
+            <li>Manipulación de archivo de configuración para ejecución de comandos</li>
+          </ul>
+
+        </section>
+
+        <section class="post" id="learning-objectives">
+          <br>
+          <h3 class="post-title">Key Learning Objectives</h3><br>
+
+          <p class="plain-text">Los objetivos de aprendizaje clave en esta máquina incluyen:</p>
+
+          <ul class="plain-text">
+            <li>✅ Port Scanning & Service Enumeration</li>
+            <li>✅ Web Application Analysis & Source Code Review</li>
+            <li>✅ JavaScript Sandbox Escape - CVE-2024-28397</li>
+            <li>✅ SQLite Database Analysis</li>
+            <li>✅ Hash Cracking Techniques</li>
+            <li>✅ SSH Access & User Pivoting</li>
+            <li>✅ SUID Binary Exploitation</li>
+            <li>✅ Configuration File Manipulation for Privilege Escalation</li>
+          </ul>
+
+        </section>
+
+        <section class="post" id="reconnaissance">
+          <br>
+          <h3 class="post-title">Reconnaissance & Enumeration</h3><br>
+
+          <p class="plain-text">El reconocimiento inicial se realizó utilizando Nmap para identificar puertos abiertos y
+            servicios en ejecución.</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">-p- --open -n -Pn -vvv -oG ports 10.10.11.82
+</span><span class="ve">❯ sudo nmap </span><span class="p">-p 22,8000 -sCV -oN services 10.10.11.82</span>
+</code></pre>
+            </div>
+          </div><br>
+
+          <p class="plain-text"><strong>Resultados:</strong></p>
+          <ul class="plain-text">
+            <li>Puerto 22/tcp: Servicio SSH</li>
+            <li>Puerto 8000/tcp: Servidor HTTP</li>
+          </ul>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-01.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-01.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="web-assessment">
+          <br>
+          <h3 class="post-title">Web Application Assessment</h3><br>
+
+          <p class="plain-text">La aplicación web ejecutándose en el puerto 8000 es una plataforma para ejecutar código
+            JavaScript en línea.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-04.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-04.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">Después de registrarse e iniciar sesión en la plataforma, exploré su funcionalidad.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-02.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-02.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="source-code">
+          <br>
+          <h3 class="post-title">Source Code Analysis</h3><br>
+
+          <p class="plain-text">El código fuente puede descargarse haciendo clic en <code
+              class="language-plaintext highlighter-rouge">Download App</code>. La interfaz del dashboard muestra varias
+            funcionalidades disponibles.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-03.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-03.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">Después de hacer clic en <code
+              class="language-plaintext highlighter-rouge">Download App</code>, se descargó un archivo .zip y se extrajo
+            para análisis.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-05.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-05.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">El archivo .db parece estar vacío en el paquete descargado.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-06.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-06.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="tech-stack">
+          <br>
+          <h3 class="post-title">Technology Stack Identification</h3><br>
+
+          <p class="plain-text">Se identificaron las versiones de las tecnologías ejecutándose detrás de la aplicación
+            web.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-07.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-07.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="exploitation">
+          <br>
+          <h3 class="post-title">Vulnerability Identification & Exploitation</h3><br>
+
+          <p class="plain-text">La investigación reveló una vulnerabilidad en la versión de js2py: CVE-2024-28397 -
+            Sandbox Escape</p>
+          <p class="plain-text">Referencia: <a href="https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape"
+              target="_blank">https://github.com/Marven11/CVE-2024-28397-js2py-Sandbox-Escape</a></p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-08.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-08.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">El payload fue modificado para enviar una reverse shell. Después de hacer clic en <code
+              class="language-plaintext highlighter-rouge">Run Code</code> mientras se escuchaba en el puerto
+            especificado, se recibió exitosamente una reverse shell.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-09.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-09.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="database">
+          <br>
+          <h3 class="post-title">Database Analysis & Credential Extraction</h3><br>
+
+          <p class="plain-text">Una vez dentro de la máquina, se recuperó información que estaba vacía en el archivo
+            .zip del servidor. Se encontró una contraseña hasheada en MD5 para el usuario <code
+              class="language-plaintext highlighter-rouge">marco</code>.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-10.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-10.png"></p>
+            </div>
+          </a>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-11.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-11.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">La contraseña fue crackeada usando crackstation.net.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-12.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-12.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="user-pivoting">
+          <br>
+          <h3 class="post-title">User Pivoting</h3><br>
+
+          <p class="plain-text">Dado que el servicio SSH está activo, se intentó la conexión usando las credenciales de
+            marco.</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">marco@10.10.11.82</span>
+</code></pre>
+            </div>
+          </div><br>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-13.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-13.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">Se obtuvo la flag de usuario:</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ cat </span><span class="p">user.txt</span>
+</code></pre>
+            </div>
+          </div><br>
+
+        </section>
+
+        <section class="post" id="privesc-analysis">
+          <br>
+          <h3 class="post-title">Privilege Escalation Analysis</h3><br>
+
+          <p class="plain-text">Se examinaron los permisos SUID y se reveló que <code
+              class="language-plaintext highlighter-rouge">npbackup-cli</code> puede ejecutarse como root. Esta es una
+            herramienta de backup en línea de comandos.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-14.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-14.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">En el mismo directorio, se encontró un archivo <code
+              class="language-plaintext highlighter-rouge">.conf</code> propiedad de root.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-15.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-15.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="config-exploit">
+          <br>
+          <h3 class="post-title">Configuration File Exploitation</h3><br>
+
+          <p class="plain-text">El examen del archivo de configuración reveló una característica interesante: los
+            comandos pueden ejecutarse antes de realizar el backup.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-16.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-16.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">Dado que el archivo no era propiedad del usuario actual, se copió para permitir la
+            modificación y adición de código para establecer una reverse shell.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-17.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-17.png"></p>
+            </div>
+          </a>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-18.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-18.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="root-access">
+          <br>
+          <h3 class="post-title">Root Access Achievement</h3><br>
+
+          <p class="plain-text">En el puerto de escucha, se recibió la shell como root y se leyó exitosamente la flag de
+            root.</p>
+
+          <a href="/hackthebox/codeparttwo/screenshots/codeparttwo-19.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/codeparttwo/screenshots/codeparttwo-19.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="recommendations">
+          <br>
+          <h3 class="post-title">Recommendations</h3><br>
+
+          <br>
+          <h4 class="post-title">Immediate Actions</h4><br>
+
+          <p class="plain-text"><strong>1. JavaScript Execution Platform Security</strong></p>
+          <ul class="plain-text">
+            <li>Actualizar js2py a la última versión</li>
+            <li>Aplicar parches de seguridad para CVE-2024-28397</li>
+            <li>Implementar sandboxing apropiado para ejecución de código</li>
+            <li>Restringir acceso al sistema de archivos para código ejecutado</li>
+          </ul>
+
+          <p class="plain-text"><strong>2. Application Security</strong></p>
+          <ul class="plain-text">
+            <li>Eliminar funcionalidad de descarga de código fuente</li>
+            <li>Encriptar contenidos sensibles de la base de datos</li>
+            <li>Implementar controles de acceso apropiados para archivos de base de datos</li>
+          </ul>
+
+          <p class="plain-text"><strong>3. System Hardening</strong></p>
+          <ul class="plain-text">
+            <li>Eliminar o restringir permisos SUID en <code
+                class="language-plaintext highlighter-rouge">/usr/bin/npbackup-cli</code></li>
+            <li>Implementar controles de acceso apropiados para archivos de configuración</li>
+            <li>Revisar y restringir capacidades de ejecución de comandos en herramientas de backup</li>
+          </ul>
+
+          <br>
+          <h4 class="post-title">Long-term Security Improvements</h4><br>
+
+          <p class="plain-text"><strong>1. Access Controls</strong></p>
+          <ul class="plain-text">
+            <li>Implementar el principio de mínimo privilegio para todos los binarios del sistema</li>
+            <li>Auditoría regular de binarios SUID/SGID</li>
+            <li>Permisos de archivo apropiados para archivos de configuración</li>
+          </ul>
+
+          <p class="plain-text"><strong>2. Code Execution Environment</strong></p>
+          <ul class="plain-text">
+            <li>Implementar entorno de ejecución contenedorizado</li>
+            <li>Usar jaulas chroot apropiadas o mecanismos de aislamiento similares</li>
+            <li>Evaluaciones de seguridad regulares de plataformas de ejecución de código</li>
+          </ul>
+
+          <p class="plain-text"><strong>3. Monitoring & Detection</strong></p>
+          <ul class="plain-text">
+            <li>Implementar logging para operaciones de backup</li>
+            <li>Monitorear modificaciones de archivos de configuración</li>
+            <li>Desplegar sistemas de detección de intrusos</li>
+            <li>Evaluaciones de vulnerabilidades y pruebas de penetración regulares</li>
+          </ul>
+
+        </section>
+
+      </article>
+    </div>
+    <footer class="footer">
+      <span class="footer__copyright">&copy; 2026 - s1egfr1ed</span>
+    </footer><br><br>
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+  </div>
+</body>
+
+</html>

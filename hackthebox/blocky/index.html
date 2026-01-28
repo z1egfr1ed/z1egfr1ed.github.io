@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Blocky</title>
+
+  <meta name="description" content="Resolución de la máquina Blocky de la plataforma de HackTheBox">
+  <meta name="author" content="s1egfr1ed">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Blocky">
+  <meta name="twitter:description" content="Resolución de la máquina Blocky de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="s1egfr1ed">
+  <meta name="twitter:image" content="/images/hackthebox/blocky.png" />
+
+  <meta property="og:site_name" content="s1egfr1ed" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Blocky">
+  <meta property="og:description" content="Resolución de la máquina Blocky de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/blocky.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/blocky.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Blocky" href="/feed.xml">
+</head>
+
+<body style="background-color: #282828;">
+
+  <span class="mobile btn-mobile-menu">
+    <i class="icon icon-list btn-mobile-menu__icon"></i>
+    <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+  </span>
+
+  <header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+    <div class="panel-main">
+      <div class="panel-main__inner panel-inverted">
+        <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="s1egfr1ed">
+          <h1 class="panel-cover__title panel-title scale-up-center">s1egfr1ed</h1>
+
+          <hr class="panel-cover__divider">
+          <p class="panel-cover__description slide-top"><strong>Pentesting y</strong> <strong>Desarrollo de
+              Malware</strong></p>
+          <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+          <div class="navigation-wrapper">
+            <nav class="cover-navigation cover-navigation--primary">
+              <ul class="navigation">
+                <li class="navigation__item grow"><a href="/hackthebox" title="s1egfr1ed"
+                    class="blog-button">HackTheBox</a></li>
+              </ul>
+            </nav>
+
+            <nav class="cover-navigation navigation--social">
+              <ul class="navigation">
+
+                <li class="navigation__item grow">
+                  <a href="https://github.com/z1egfr1ed" title="Github" target="_blank">
+                    <i class="icon icon-social-github"></i>
+                    <span class="label">GitHub</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://linkedin.com/in/marshelaillon" title="Linkedin" target="_blank">
+                    <i class="icon icon-social-linkedin"></i>
+                    <span class="label">Linkedin</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://instagram.com/zygfr1ed" title="Instagram" target="_blank">
+                    <i class="icon icon-social-instagram"></i>
+                    <span class="label">Instagram</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://x.com/z1egfr1ed" title="Twitter" target="_blank">
+                    <i class="icon icon-social-twitter"></i>
+                    <span class="label">Twitter</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="https://youtube.com/@s1egfr1ed" title="Youtube" target="_blank">
+                    <i class="icon icon-social-youtube"></i>
+                    <span class="label">Youtube</span>
+                  </a>
+                </li>
+
+                <li class="navigation__item grow">
+                  <a href="mailto:marshel.aillon@gmail.com" title="Correo Electrónico" target="_blank">
+                    <i class="icon icon-mail"></i>
+                    <span class="label">Email</span>
+                  </a>
+                </li>
+
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-cover--overlay"></div>
+    </div>
+  </header>
+  <br>
+  <div class="content-wrapper">
+    <div class="content-wrapper__inner">
+      <article class="post-container post-container--single">
+        <div class="izquierda">
+          <h3 class="post-title">Contenido</h3><br>
+          <ul>
+            <li><a href="#key-findings">Key Findings</a></li>
+            <li><a href="#learning-objectives">Key Learning Objectives</a></li>
+            <li><a href="#reconnaissance">Reconnaissance & Enumeration</a></li>
+            <li><a href="#web-assessment">Web Application Assessment</a></li>
+            <li><a href="#ssh-enum">SSH Username Enumeration</a></li>
+            <li><a href="#directory-discovery">Directory Discovery & Fuzzing</a></li>
+            <li><a href="#reverse-engineering">Java Application Reverse Engineering</a></li>
+            <li><a href="#credential-validation">Credential Validation & User Access</a></li>
+            <li><a href="#privesc-assessment">Privilege Escalation Assessment</a></li>
+            <li><a href="#root-access">Administrative Access Achievement</a></li>
+            <li><a href="#recommendations">Recommendations</a></li>
+          </ul>
+        </div>
+
+        <header class="post-header slide-top">
+          <h4 class="post-title">HackTheBox</h4>
+          <picture><img src="/images/hackthebox/blocky.png"
+              style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable" />
+          </picture>
+          <h2 class="post-title">Blocky</h2><br>
+        </header>
+
+        <section class="post" id="key-findings">
+          <br>
+          <h3 class="post-title">Key Findings</h3><br>
+
+          <p class="plain-text">Durante el análisis de seguridad de la máquina Blocky se identificaron las siguientes
+            vulnerabilidades críticas:</p>
+
+          <ul class="plain-text">
+            <li>Archivos Java archive sensibles accesibles vía directorio web</li>
+            <li>Credenciales de base de datos hardcodeadas en la aplicación BlockyCore.jar</li>
+            <li>Servicio SSH vulnerable a enumeración de nombres de usuario (OpenSSH 7.2)</li>
+            <li>Privilegios sudo sin restricciones para cuenta de usuario comprometida</li>
+          </ul>
+
+        </section>
+
+        <section class="post" id="learning-objectives">
+          <br>
+          <h3 class="post-title">Key Learning Objectives</h3><br>
+
+          <p class="plain-text">Los objetivos de aprendizaje clave en esta máquina incluyen:</p>
+
+          <ul class="plain-text">
+            <li>✅ Port Scanning & Service Enumeration</li>
+            <li>✅ WordPress Content Management System Analysis</li>
+            <li>✅ Web Directory Fuzzing & Discovery</li>
+            <li>✅ Java Archive Reverse Engineering</li>
+            <li>✅ SSH Username Enumeration Techniques</li>
+            <li>✅ Credential Extraction from Java Applications</li>
+            <li>✅ Privilege Escalation via Sudo Misconfiguration</li>
+          </ul>
+
+        </section>
+
+        <section class="post" id="reconnaissance">
+          <br>
+          <h3 class="post-title">Reconnaissance & Enumeration</h3><br>
+
+          <p class="plain-text">El reconocimiento inicial se realizó utilizando <code
+              class="language-plaintext highlighter-rouge">nmap</code> para identificar puertos abiertos y servicios en
+            ejecución.</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">--top-ports=100 --open -n -Pn -vvv -oG ports 10.10.10.37
+</span><span class="ve">❯ sudo nmap </span><span class="p">-p 21,22,80 -sCV -oN services 10.10.10.37</span>
+</code></pre>
+            </div>
+          </div><br>
+
+          <p class="plain-text"><strong>Resultados:</strong></p>
+          <ul class="plain-text">
+            <li>Puerto 21/tcp: Servicio FTP</li>
+            <li>Puerto 22/tcp: Servicio SSH (OpenSSH 7.2)</li>
+            <li>Puerto 80/tcp: Servidor Apache HTTP</li>
+          </ul>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-02.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-02.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="web-assessment">
+          <br>
+          <h3 class="post-title">Web Application Assessment</h3><br>
+
+          <p class="plain-text">El examen del navegador reveló un sistema de gestión de contenido WordPress con entradas
+            de blog activas.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-01.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-01.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">El análisis de las publicaciones del blog identificó un nombre de usuario potencial
+            <code class="language-plaintext highlighter-rouge">notch</code> asociado con el contenido publicado.
+          </p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-03.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-03.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="ssh-enum">
+          <br>
+          <h3 class="post-title">SSH Username Enumeration</h3><br>
+
+          <p class="plain-text">Utilizando el módulo de enumeración de nombres de usuario SSH de Metasploit, se confirmó
+            la validez del usuario <code class="language-plaintext highlighter-rouge">notch</code>. Guardaremos este
+            usuario para más adelante. Esta técnica es efectiva contra OpenSSH versión 7.2 pero no tendría éxito contra
+            implementaciones SSH modernas.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-04.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-04.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="directory-discovery">
+          <br>
+          <h3 class="post-title">Directory Discovery & Fuzzing</h3><br>
+
+          <p class="plain-text">Se realizó la enumeración de directorios web para identificar rutas accesibles y
+            contenido oculto.</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ gobuster dir </span><span class="p">-u http://blocky.htb -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt -t 50 --no-error</span>
+</code></pre>
+            </div>
+          </div><br>
+
+          <p class="plain-text">Se descubrió el directorio <code
+              class="language-plaintext highlighter-rouge">/plugins</code> y se encontró que contenía archivos Java
+            archive descargables.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-05.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-05.png"></p>
+            </div>
+          </a>
+
+          <p class="plain-text">Se identificaron y descargaron dos archivos JAR para análisis adicional.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-06.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-06.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="reverse-engineering">
+          <br>
+          <h3 class="post-title">Java Application Reverse Engineering</h3><br>
+
+          <p class="plain-text">Se realizó ingeniería inversa del archivo BlockyCore.jar utilizando el decompilador
+            JD-GUI.</p>
+
+          <div class="language-python highlighter-rouge contenedor">
+            <div class="highlight">
+              <pre class="highlight">
+<code><span class="ve">❯ jd-gui </span><span class="p">BlockyCore.jar &</span>
+</code></pre>
+            </div>
+          </div><br>
+
+          <p class="plain-text">El análisis reveló credenciales de base de datos hardcodeadas dentro del código fuente
+            de la aplicación.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-07.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-07.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="credential-validation">
+          <br>
+          <h3 class="post-title">Credential Validation & User Access</h3><br>
+
+          <p class="plain-text">Las credenciales extraídas fueron probadas contra el servicio SSH utilizando el nombre
+            de usuario previamente identificado <code class="language-plaintext highlighter-rouge">notch</code>. La
+            autenticación fue exitosa, estableciendo acceso inicial al sistema.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-08.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-08.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="privesc-assessment">
+          <br>
+          <h3 class="post-title">Privilege Escalation Assessment</h3><br>
+
+          <p class="plain-text">La investigación de privilegios sudo reveló acceso administrativo sin restricciones para
+            la cuenta de usuario comprometida.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-09.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-09.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="root-access">
+          <br>
+          <h3 class="post-title">Administrative Access Achievement</h3><br>
+
+          <p class="plain-text">La ejecución de una shell bash con privilegios sudo resultó en el compromiso completo
+            del sistema y acceso root.</p>
+
+          <a href="/hackthebox/blocky/screenshots/blocky-10.png" target="_blank">
+            <div>
+              <p><img src="/hackthebox/blocky/screenshots/blocky-10.png"></p>
+            </div>
+          </a>
+
+        </section>
+
+        <section class="post" id="recommendations">
+          <br>
+          <h3 class="post-title">Recommendations</h3><br>
+
+          <br>
+          <h4 class="post-title">Immediate Actions</h4><br>
+
+          <p class="plain-text"><strong>1. Secure Web Directory Access</strong></p>
+          <ul class="plain-text">
+            <li>Eliminar o restringir el acceso al directorio <code
+                class="language-plaintext highlighter-rouge">/plugins</code></li>
+            <li>Implementar controles de acceso apropiados para archivos de aplicación sensibles</li>
+            <li>Prevenir la descarga directa de archivos Java archive</li>
+          </ul>
+
+          <p class="plain-text"><strong>2. Application Security</strong></p>
+          <ul class="plain-text">
+            <li>Eliminar credenciales hardcodeadas del código fuente de la aplicación</li>
+            <li>Implementar prácticas seguras de gestión de credenciales</li>
+            <li>Realizar revisión de código para vulnerabilidades de seguridad adicionales</li>
+          </ul>
+
+          <p class="plain-text"><strong>3. SSH Service Hardening</strong></p>
+          <ul class="plain-text">
+            <li>Actualizar OpenSSH a la última versión para prevenir enumeración de usuarios</li>
+            <li>Implementar autenticación basada en claves SSH</li>
+            <li>Deshabilitar autenticación por contraseña donde sea posible</li>
+          </ul>
+
+          <p class="plain-text"><strong>4. Privilege Management</strong></p>
+          <ul class="plain-text">
+            <li>Revisar y restringir privilegios sudo basados en el principio de mínimo privilegio</li>
+            <li>Eliminar acceso sudo sin restricciones para cuentas de usuario estándar</li>
+            <li>Implementar controles de acceso basados en roles</li>
+          </ul>
+
+          <br>
+          <h4 class="post-title">Long-term Security Improvements</h4><br>
+
+          <p class="plain-text"><strong>1. Access Controls</strong></p>
+          <ul class="plain-text">
+            <li>Implementar permisos de sistema de archivos comprehensivos</li>
+            <li>Auditoría regular de privilegios de usuario y derechos de acceso</li>
+            <li>Desplegar segmentación de red y restricciones de acceso</li>
+          </ul>
+
+          <p class="plain-text"><strong>2. Application Security</strong></p>
+          <ul class="plain-text">
+            <li>Establecer prácticas de ciclo de vida de desarrollo seguro</li>
+            <li>Implementar pruebas de seguridad automatizadas en el pipeline de desarrollo</li>
+            <li>Evaluaciones de seguridad regulares de aplicaciones personalizadas</li>
+          </ul>
+
+          <p class="plain-text"><strong>3. Monitoring & Detection</strong></p>
+          <ul class="plain-text">
+            <li>Desplegar soluciones de monitoreo y análisis de logs</li>
+            <li>Implementar sistemas de detección de intrusos</li>
+            <li>Establecer alertas para intentos de escalada de privilegios</li>
+          </ul>
+
+          <p class="plain-text"><strong>4. Credential Management</strong></p>
+          <ul class="plain-text">
+            <li>Implementar sistema centralizado de gestión de credenciales</li>
+            <li>Aplicar políticas de contraseñas fuertes en todos los servicios</li>
+            <li>Rotación regular de contraseñas y requisitos de unicidad</li>
+          </ul>
+
+        </section>
+
+      </article>
+    </div>
+    <footer class="footer">
+      <span class="footer__copyright">&copy; 2026 - s1egfr1ed</span>
+    </footer><br><br>
+
+    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+  </div>
+</body>
+
+</html>
