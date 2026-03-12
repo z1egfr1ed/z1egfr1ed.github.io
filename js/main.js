@@ -16,7 +16,8 @@
       $('.panel-cover').addClass('panel-cover--collapsed')
     }
 
-    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+    // Keep the cover expanded on the home pages (root and /hackthebox)
+    if (window.location.pathname !== '/' && window.location.pathname !== '/index.html' && !window.location.pathname.startsWith('/hackthebox')) {
       $('.panel-cover').addClass('panel-cover--collapsed')
     }
     

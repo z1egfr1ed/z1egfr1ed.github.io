@@ -43,7 +43,7 @@
   <link rel="alternate" type="application/rss+xml" title="Writeups" href="/feed.xml">
 </head>
 
-<body style="background-color: #282828;">
+<body class="writeups" style="background-color: #282828;">
 
   <span class="mobile btn-mobile-menu">
     <i class="icon icon-list btn-mobile-menu__icon"></i>
@@ -55,7 +55,9 @@
     <div class="panel-main">
       <div class="panel-main__inner panel-inverted">
         <div class="panel-main__content">
-          <img src="/images/profile.jpg" class="zoomable user-image" alt="s1egfr1ed">
+          <a href="/" title="Volver al inicio">
+            <img src="/images/profile.jpg" class="zoomable user-image" alt="s1egfr1ed">
+          </a>
           <h1 class="panel-cover__title panel-title scale-up-center">‎‎‎‎‎s1egfr1ed</h1>
 
           <hr class="panel-cover__divider">
@@ -132,24 +134,23 @@
   <div class="content-wrapper">
     <div class="content-wrapper__inner">
       <div class="main-post-list">
-        <ol class="post-list">
-          <hr>
-
-          <picture><img src="/images/profile.jpg"
+        <div class="page-header">
+          <img src="/images/profile.jpg"
               style="float: right; margin-top: -38px; margin-right:-20px; margin-left:10px; height:110px;"
               class="include_image zoomable" />
-            <h2 class="post-title">Writeups</h2>
-            <br></br><br></br><br></br>
+          <h2 class="post-title">Writeups</h2>
+        </div>
 
-            <li class="slide-top">
-              <picture><img src="/images/hackthebox/machines.png"
-                  style="float: right; margin-right:0px; margin-left:60px; height:65px;"
-                  class="include_image zoomable" />
-                <h2 class="post-list__post-title post-title"><a href="/hackthebox"
-                    title="HackTheBox - Machines">HackTheBox - Machines</a></h2>
-                <p class="excerpt">Resolución de máquinas de la plataforma de HackTheBox</p>
-            </li>
-            <hr class="post-list__divider ">
+        <ol class="post-list">
+          <li class="slide-top">
+            <picture><img src="/images/hackthebox/machines.png"
+                style="float: right; margin-right:0px; margin-left:60px; height:65px;"
+                class="include_image zoomable" />
+              <h2 class="post-list__post-title post-title"><a href="/hackthebox"
+                  title="HackTheBox - Machines">HackTheBox - Machines</a></h2>
+              <p class="excerpt">Resolución de máquinas de la plataforma de HackTheBox</p>
+          </li>
+          <hr class="post-list__divider ">
 
         </ol>
       </div>
@@ -163,7 +164,6 @@
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript" src="/js/main.js?1678863010724689519"></script>
 
-  </div>
 </body>
 
 </html>
