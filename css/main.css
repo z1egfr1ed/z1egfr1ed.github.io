@@ -5995,8 +5995,6 @@ hr {
 	z-index: 100;
 	width: 100%;
 	max-width: none;
-	min-height: 100vh;
-	height: 100vh;
 	background: url(../images/background-cover.jpg) top left;
 	background-size: cover;
 	background-position: center center;
@@ -6043,7 +6041,6 @@ hr {
 .panel-main {
 	display: block;
 	width: 100%;
-	min-height: 100vh;
 	height: 100%;
 	background-size: cover;
 	background-position: center center;
@@ -6056,7 +6053,6 @@ hr {
 }
 
 .panel-main__inner {
-	display: table-cell;
 	vertical-align: middle;
 	position: relative;
 	z-index: 800;
@@ -7168,4 +7164,5 @@ pre.highlight code,
 
 .zoomable:hover {
   transform: scale(1.2);
+}
 }

